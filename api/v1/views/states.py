@@ -20,7 +20,7 @@ def all_States():
 def get_state(state_id):
     """GET the list of all State objects."""
     try:
-        state = jsonify(storage.get('State', state_id).to_dict())
+        state = jsonify(storage.get(State, state_id).to_dict())
         return state
     except:
         abort(404)
@@ -30,7 +30,7 @@ def get_state(state_id):
                  methods=['DELETE'])
 def delete_state(state_id):
     """GET the list of all State objects."""
-    state = storage.get('State', state_id)
+    state = storage.get(State, state_id)
     if state:
         state.delete(), storage.save()
         return {}
@@ -40,7 +40,7 @@ def delete_state(state_id):
 
 @app_views.route('/states', methods=['POST'],
                  strict_slashes=False)
-def create_state(state_id):
+def create_state():
     """POST the list of all State objects."""
     state = request.get_json()
     if type(state) is not dict:
@@ -61,7 +61,7 @@ def update_state(state_id):
     update_state = request.get_json()
     if type(update_state) is not dict:
         abort(400, {'Not a JSON'})
-    state = storage.get('State', state_id)
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
     else:
