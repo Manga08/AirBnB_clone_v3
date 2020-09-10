@@ -8,17 +8,17 @@ from models.user import User
 
 @app_views.route('/users', strict_slashes=False)
 def all_Users():
-    """Retrieves the list of all State objects."""
+    """Retrieves the list of all user objects."""
     new_dict = []
-    for usr in storage.all(User).values():
+    for usr in storage.all('User').values():
         new_dict.append(usr.to_dict())
     return jsonify(new_dict)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
                  methods=['GET'])
-def get_usr(user_id):
-    """GET the list of all State objects."""
+def get_user(user_id):
+    """GET the list of all user objects."""
     try:
         usr = jsonify(storage.get(User, user_id).to_dict())
         return usr
@@ -28,8 +28,8 @@ def get_usr(user_id):
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
                  methods=['DELETE'])
-def delete_state(user_id):
-    """GET the list of all State objects."""
+def delete_user(user_id):
+    """GET the list of all user objects."""
     usr = storage.get(User, user_id)
     if usr:
         usr.delete(), storage.save()
@@ -40,8 +40,8 @@ def delete_state(user_id):
 
 @app_views.route('/users', methods=['POST'],
                  strict_slashes=False)
-def create_state():
-    """POST the list of all State objects."""
+def create_user():
+    """POST the list of all user objects."""
     usr = request.get_json()
     if type(usr) is not dict:
         abort(400, {'Not a JSON'})
@@ -50,18 +50,18 @@ def create_state():
     elif 'password' not in usr:
         abort(400, {'Missing password'})
     else:
-        usr = User()
-        storage.new(usr)
+        new_usr = User(**usr)
+        storage.new(new_usr)
         storage.save()
         return make_response(jsonify(usr.to_dict()), 201)
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False,
                  methods=['PUT'])
-def update_state(user_id):
-    """PUT the list of all State objects."""
+def update_user(user_id):
+    """PUT the list of all user objects."""
     update_usr = request.get_json()
-    if type(update_state) is not dict:
+    if type(update_usr) is not dict:
         abort(400, {'Not a JSON'})
     usr = storage.get(User, user_id)
     if not usr:
