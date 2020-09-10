@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """create a route /status on the object app_views that returns a JSON."""
-from flask import Flask, jsonify, abort, request, make_response
+from flask import Flask, jsonify, abort, request
 from api.v1.views import app_views
 from models import storage
 from models.place import Place
@@ -21,7 +21,7 @@ def all_review(place_id):
     return jsonify(new_dict)
 
 
-@app_views.route('places/reviews/<review_id>', strict_slashes=False,
+@app_views.route('/reviews/<review_id>', strict_slashes=False,
                  methods=['GET'])
 def get_review(review_id):
     """GET the list of all review objects."""
@@ -32,7 +32,7 @@ def get_review(review_id):
         abort(404)
 
 
-@app_views.route('reviews/<review_id>', strict_slashes=False,
+@app_views.route('/reviews/<review_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_review(review_id):
     """GET the list of all review objects."""
@@ -44,7 +44,7 @@ def delete_review(review_id):
         abort(404)
 
 
-@app_views.route('places/<place_id>/reviews', methods=['POST'],
+@app_views.route('/places/<place_id>/reviews', methods=['POST'],
                  strict_slashes=False)
 def create_review(place_id):
     """POST the list of all review objects."""
