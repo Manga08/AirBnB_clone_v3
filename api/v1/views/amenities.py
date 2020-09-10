@@ -7,29 +7,29 @@ from models.amenity import Amenity
 
 
 @app_views.route('/amenities', strict_slashes=False)
-def all_States():
-    """Retrieves the list of all State objects."""
+def all_amenitys():
+    """Retrieves the list of all amenity objects."""
     new_dict = []
-    for amnty in storage.all(Amenity).values():
+    for amnty in storage.all('Amenity').values():
         new_dict.append(amnty.to_dict())
     return jsonify(new_dict)
 
 
 @app_views.route('amenities/<amenity_id>', strict_slashes=False,
                  methods=['GET'])
-def get_state(amenity_id):
-    """GET the list of all State objects."""
+def get_amenity(amenity_id):
+    """GET the list of all amenity objects."""
     try:
         amnty = jsonify(storage.get(Amenity, amenity_id).to_dict())
         return amnty
-    except:
+    except BaseException:
         abort(404)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
                  methods=['DELETE'])
-def delete_state(amenity_id):
-    """GET the list of all State objects."""
+def delete_amenity(amenity_id):
+    """GET the list of all amenity objects."""
     amnty = storage.get(Amenity, amenity_id)
     if amnty:
         amnty.delete(), storage.save()
@@ -40,24 +40,24 @@ def delete_state(amenity_id):
 
 @app_views.route('/amenities', methods=['POST'],
                  strict_slashes=False)
-def create_state():
-    """POST the list of all State objects."""
-    state = request.get_json()
-    if type(state) is not dict:
+def create_amenity():
+    """POST the list of all amenity objects."""
+    amenity = request.get_json()
+    if type(amenity) is not dict:
         abort(400, {'Not a JSON'})
-    elif 'name' not in state:
+    elif 'name' not in amenity:
         abort(400, {'Missing name'})
     else:
-        amnty = Amenity()
-        storage.new(amnty)
+        new_amnty = Amenity(**amenity)
+        storage.new(new_amnty)
         storage.save()
-        return make_response(jsonify(amnty.to_dict()), 201)
+        return make_response(jsonify(new_amnty.to_dict()), 201)
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
                  methods=['PUT'])
-def update_state(amenity_id):
-    """PUT the list of all State objects."""
+def update_amenity(amenity_id):
+    """PUT the list of all amenity objects."""
     update_amnty = request.get_json()
     if type(update_amnty) is not dict:
         abort(400, {'Not a JSON'})
@@ -66,6 +66,7 @@ def update_state(amenity_id):
         abort(404)
     else:
         for key, value in update_amnty.items():
-            setattr(amnty, key, value)
+            if key not in ['id', 'created_at', 'updated_at']:
+                setattr(amnty, key, value)
         storage.save()
         return jsonify(amnty.to_dict())
