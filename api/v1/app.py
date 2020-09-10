@@ -10,10 +10,12 @@ from api.v1.views.amenities import *
 from api.v1.views.users import *
 from api.v1.views.places import *
 from api.v1.views.places_reviews import *
+from api.v1.views.places_amenities import *
 from os import getenv
 app = Flask(__name__)
 app.register_blueprint(app_views)
 cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
+
 
 @app.teardown_appcontext
 def remove_session(response_or_exc):
