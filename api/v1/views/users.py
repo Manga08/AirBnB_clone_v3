@@ -20,8 +20,8 @@ def all_Users():
 def get_user(user_id):
     """GET the list of all user objects."""
     try:
-        usr = jsonify(storage.get(User, user_id).to_dict())
-        return usr
+        usr = storage.get(User, user_id)
+        return jsonify(usr.to_dict())
     except:
         abort(404)
 
