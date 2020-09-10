@@ -25,10 +25,10 @@ def all_review(place_id):
                  methods=['GET'])
 def get_review(review_id):
     """GET the list of all review objects."""
-    try:
-        review = jsonify(storage.get(Review, review_id).to_dict())
-        return review
-    except BaseException:
+    review = storage.get(Review, review_id)
+    if review:
+        return jsonify(review.to_dict())
+    else:
         abort(404)
 
 
@@ -38,7 +38,7 @@ def delete_review(review_id):
     """GET the list of all review objects."""
     review = storage.get(Review, review_id)
     if review:
-        review.delete(), storage.save()
+        storage.delete(review), storage.save()
         return {}
     else:
         abort(404)
@@ -64,7 +64,7 @@ def create_review(place_id):
         new_review = Review(**review)
         storage.new(new_review)
         storage.save()
-        return make_response(jsonify(new_review.to_dict()), 201)
+        return jsonify(new_review.to_dict()), 201
 
 
 @app_views.route('/reviews/<review_id>', strict_slashes=False,
@@ -72,14 +72,14 @@ def create_review(place_id):
 def update_review(review_id):
     """PUT the list of all review objects."""
     update_review = request.get_json()
-    if type(update_review) is not dict:
+    if not update_review:
         abort(400, {'Not a JSON'})
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
     else:
         for key, value in update_review.items():
-            if key not in ['id', 'user_id', 'city_id', 'created_at',
+            if key not in ['id', 'user_id', 'place_id', 'created_at',
                            'updated_at']:
                 setattr(review, key, value)
         storage.save()
