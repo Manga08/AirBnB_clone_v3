@@ -19,10 +19,10 @@ def all_Users():
                  methods=['GET'])
 def get_user(user_id):
     """GET the list of all user objects."""
-    try:
-        usr = storage.get(User, user_id)
+    usr = storage.get(User, user_id)
+    if usr:
         return jsonify(usr.to_dict())
-    except:
+    else:
         abort(404)
 
 
@@ -43,7 +43,7 @@ def delete_user(user_id):
 def create_user():
     """POST the list of all user objects."""
     usr = request.get_json()
-    if type(usr) is not dict:
+    if not usr:
         abort(400, {'Not a JSON'})
     elif 'email' not in usr:
         abort(400, {'Missing email'})
@@ -61,7 +61,7 @@ def create_user():
 def update_user(user_id):
     """PUT the list of all user objects."""
     update_usr = request.get_json()
-    if type(update_usr) is not dict:
+    if not update_usr:
         abort(400, {'Not a JSON'})
     usr = storage.get(User, user_id)
     if not usr:
