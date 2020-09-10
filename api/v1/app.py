@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Start a Flask web application."""
 from flask import Flask, Blueprint, jsonify
+from flask_cors import CORS
 from models import storage
 from api.v1.views.index import *
 from api.v1.views.states import *
@@ -12,7 +13,7 @@ from api.v1.views.places_reviews import *
 from os import getenv
 app = Flask(__name__)
 app.register_blueprint(app_views)
-
+cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
 @app.teardown_appcontext
 def remove_session(response_or_exc):
