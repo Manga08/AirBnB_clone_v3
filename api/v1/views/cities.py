@@ -24,9 +24,9 @@ def all_City(state_id):
 def get_city(city_id):
     """GET the list of all cities objects."""
     city = jsonify(storage.get(City, city_id).to_dict())
-    try:
+    if city:
         return city
-    except:
+    else:
         abort(404)
 
 
